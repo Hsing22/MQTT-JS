@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--<script type='text/javascript' src='http://mosquitto.org/js/mosquitto-1.1.js'></script>-->
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>-->
+
+    <!--<script src="/node_modules/mqtt/browserMqtt.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>-->
+
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="css/index.css" type="text/css" />
+    <title></title>
+</head>
+<body>
+
+
+<div id="app">
+    {{ message }}
+</div>
+
+<div id="time"></div>
+
+<div id="time2">
+
+</div>
+
+
+<!--<div id="cosf"></div>-->
+<!-- 		<div id="app-2">
+		  <span v-bind:title="message">
+		    鼠标悬停几秒钟查看此处动态绑定的提示信息！
+		  </span>
+		</div>
+		<div id="app-3">
+		  <p v-if="seen">现在你看到我了</p>
+		</div>
+		<div id="app-4">
+		  <ol>
+		    <li v-for="todo in todos">
+		      {{ todo.text }}
+		    </li>
+		  </ol>
+		</div> -->
+<!-- 		<div id="app-6">
+		  <p>{{ message }}</p>
+		  <input v-model="message">
+		</div> -->
+
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '实时温度传输'
+        }
+    })
+    // 			var app2 = new Vue({
+    // 			  el: '#app-2',
+    // 			  data: {
+    // 			    message: '页面加载于 ' + new Date().toLocaleString()
+    // 			  }
+    // 			})
+    // 			var app3 = new Vue({
+    // 			  el: '#app-3',
+    // 			  data: {
+    // 			    seen: true
+    // 			  }
+    // 			})
+    // 			var app4 = new Vue({
+    // 			  el: '#app-4',
+    // 			  data: {
+    // 			    todos: [
+    // 			      { text: '学习 JavaScript' },
+    // 			      { text: '学习 Vue' }
+    // 			    ]
+    // 			  }
+    // 			})
+    //			var app6 = new Vue({
+    //				  el: '#app-6',
+    //				  data: {
+    //				    message: 'Hello Vue!'
+    //				  }
+    //				})
+
+    //			function hello(){
+    //				var timestamp =Date.parse(new Date());
+    //				console.log(timestamp)
+    //			}
+    //			var timestamp =Date.parse(new Date());
+    //			window.setTimeout("hello()",1000);
+    //
+
+    // function time(){
+    //     var vWeek,vWeek_s,vDay;
+    //     vWeek = ["星期天","星期一","星期二","星期三","星期四","星期五","星期六"];
+    //     var date =  new Date();
+    //     year = date.getFullYear();
+    //     month = date.getMonth() + 1;
+    //     day = date.getDate();
+    //     hours = date.getHours();
+    //     minutes = date.getMinutes();
+    //     seconds = date.getSeconds();
+    //     vWeek_s = date.getDay();
+    //     document.getElementById("time").innerHTML = year + "年" + month + "月" + day + "日" + "\t" + hours + ":" + minutes +":" + seconds + "\t" + vWeek[vWeek_s] ;
+    // };
+
+
+    // function sinxf(){
+    //     var timestamp;
+    //     var timestamp =Date.parse(new Date());
+    //     var result = Math.cos(timestamp) + 22;
+    //     result = result.toFixed(2);
+    //     document.getElementById("cosf").innerHTML =result + "℃"
+    //
+    // };
+    // // setInterval("time()",1000);
+    // setInterval("sinxf()",1000);
+
+    // var timestamp;
+    // 			var app6 = new Vue({
+    // 				  el: '#app-6',
+    // 				  data: {
+    // 				    message: timestamp
+    // 				  }
+    // 				})
+
+
+
+
+
+
+    var client = mqtt.connect('mqtt://140.143.204.28:9001')
+    client.subscribe('temp')
+    client.on('message', function (topic, message) {
+        var decoded = new TextDecoder("utf-8").decode(message)
+        var decoded1 = decoded.match(/(\S*)Now/)[1];
+        var decoded2 = decoded.match(/Now(\S*)/)[1];
+
+
+
+        document.getElementById("time").innerHTML = decoded1
+        document.getElementById("time2").innerHTML = decoded2
+            console.log(decoded)
+    })
+    console.log(mqtt)
+
+
+
+    // var PORT = 8080;
+    // var HOST = '140.143.204.28';
+    //
+    //
+    // var options = {
+    //     port: PORT,
+    //     host: HOST,
+    //     protocol: 'mqtt'
+    // };
+    //
+    // var client = mqtt.connect(options);
+
+
+
+    // client = new Paho.MQTT.Client("iot.eclipse.org", Number(443),'/ws',"clientId-c2471054-a703-4edc-b7dd-c7ed7b19072a");
+    // client.connect({useSSL: true,onSuccess: onConnect});
+    // function onConnect() {
+    //     console.log("onConnected");
+    //     client.subscribe("temp1"); //订阅主题
+    // }
+    // client.onMessageArrived = onMessageArrived;//注册消息接收处理事件
+    //
+    // function onMessageArrived(message) {
+    //     console.log("收到消息:"+message.payloadString);
+    // }
+
+    // var mosq = null;
+    // var url = "ws://140.143.204.28:9001/";
+    // var topic = "temp1";
+    // // var time = 0;
+    // function conn() {
+    //     if ("WebSocket" in window) {
+    //         console.log("WebSocket is supported by your Browser!");
+    //         mosq = new Mosquitto();
+    //         mosq.connect(url);
+    //         mosq.onconnect = function(rc) {
+    //             console.log("CONNACK " + rc);
+    //         };
+    //         mosq.ondisconnect = function(rc) {
+    //             console.log("Lost connection");
+    //         };
+    //         mosq.onmessage = function(topic, payload, qos) {
+    //             console.log("PUBLISH " + topic + " " + payload);
+    //         };
+    //     } else {
+    //         console.log("WebSocket NOT supported by your Browser!");
+    //     }
+    // }
+
+
+
+
+
+</script>
+
+</body>
+</html>
